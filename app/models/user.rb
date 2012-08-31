@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   
   validates(:name, { presence: true, length: { maximum: 64, minimum: 3 } })
   validates(:email, { presence: true, uniqueness: { case_sensitive: false }, format: { with: VALID_EMAIL_REGEX } } )
-  validates(:password, { presence: true, length: { maximum: 32, minimum: 6 } })
+  validates(:password, { length: { maximum: 32, minimum: 6 } })
   validates(:password_confirmation, presence: true)
 
   before_save { self.email.downcase! }
