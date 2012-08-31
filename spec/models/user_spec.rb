@@ -36,6 +36,15 @@ describe User do
     it { should_not be_valid }
   end
   
+  describe "When email is downcased on save" do
+    let(:testEmail) { "CaseSensitive@email.com" }
+    
+    before do 
+      @user.email = testEmail
+      @user.save
+    end
+    it { @user.email.should == testEmail.downcase }
+  end
   
   describe "When username is invalid" do
     it "should be invalid" do
