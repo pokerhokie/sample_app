@@ -54,6 +54,13 @@ describe User do
     it { @user.email.should == testEmail.downcase }
   end
   
+  it "should not allow acces to" do
+    expect do
+      user = User.new(name:"test1", email:"test@test.test", password:"password", password_confirmation:"password", admin:true)
+    end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+  end
+  
+  
   describe "When username is invalid" do
     it "should be invalid" do
       usernames = %w(ab 12)
