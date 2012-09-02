@@ -103,6 +103,18 @@ describe "Authentication" do
         end
       end
       
+      describe "in the microposts controller" do
+         describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { response.should redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destroy action" do
+          before { delete micropost_path(FactoryGirl.create(:micropost)) }
+          specify { response.should redirect_to(signin_path) }
+        end
+      end
+      
     end
 
     describe "as wrong user" do
@@ -130,12 +142,13 @@ describe "Authentication" do
       
       describe "should redirect all new user requests" do
         before { visit signup_path }
-        it { should have_selector('h1', text: "My Sample App" ) } 
+        
+        it { should have_selector('h1', text: user.name ) }
+        it { should_not have_selector('title', text: '|') }  
       end
       
       describe "should redirect all user create requests" do
         before { post users_path }
-        
         specify { response.should redirect_to(root_path) }
       end
     end
