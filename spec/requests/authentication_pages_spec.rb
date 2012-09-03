@@ -151,6 +151,15 @@ describe "Authentication" do
         before { post users_path }
         specify { response.should redirect_to(root_path) }
       end
+      
+      describe "should not have a delete_link for un-owned microposts" do
+        let(:user2) { FactoryGirl.create(:user) }
+        before do
+          FactoryGirl.create(:micropost, user: user2)
+          visit user_path(user2)
+        end
+        it { should_not have_link('delete') }
+      end
     end
     
     describe "as non-admin user" do

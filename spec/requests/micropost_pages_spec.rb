@@ -32,12 +32,8 @@ describe "MicropostPages" do
   end
   
   describe "micropost destruction" do
-    before { 
-      FactoryGirl.create(:micropost, user: user)
-      #sign_in user
-      #visit root_path
-    }
-    
+    before { FactoryGirl.create(:micropost, user: user) }
+        
     describe "as correct user" do
       before { visit root_path }
       
@@ -45,6 +41,55 @@ describe "MicropostPages" do
         expect { click_link "delete" }.to change(Micropost, :count).by(-1)
       end
     end
+  end
+  
+  describe "micropost counts" do
+
+    describe "with 0 posts" do
+      before { visit root_path }
+      it { should have_content('0 microposts') }
+    end
+    
+    describe "with 1 post" do
+      before do 
+        FactoryGirl.create(:micropost, user: user)
+        visit root_path
+      end 
+      it { should have_content('1 micropost') }
+    end
+    
+    describe "with 2 posts" do
+      before do 
+        FactoryGirl.create(:micropost, user: user)
+        FactoryGirl.create(:micropost, user: user)
+        visit root_path
+      end
+      it { should have_content('2 microposts') }
+    end  
+  end
+  
+  describe "micropost pagination" do
+    before(:all) { 50.times { FactoryGirl.create(:micropost, user: user) } }
+    after(:all) { user.microposts.delete_all }
+    
+    describe "page" do
+      before { visit root_path }
+      it "should list each micropost" do
+        user.microposts.paginate(page: 1).each do |post|
+          page.should have_selector('li', text: post.content)
+        end
+      end
+
+      describe "2" do
+        before { click_link('2') }
+        it "should list each micropost" do
+          user.microposts.paginate(page: 2).each do |post|
+            page.should have_selector('li', text: post.content)
+          end
+        end
+      end 
+    end
+   
   end
 
 end

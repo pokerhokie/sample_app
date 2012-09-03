@@ -3,12 +3,12 @@ class MicropostsController < ApplicationController
   before_filter :mc_correct_user,   only: :destroy
   
   def create
+    @microposts = current_user.microposts.paginate(page: params[:page])
     @micropost = current_user.microposts.build(params[:micropost])
     if @micropost.save
       flash[:success] = "Micropost created!"
       redirect_to root_url
     else
-      @feed_items = []
       render 'static_pages/home'
     end
   end
