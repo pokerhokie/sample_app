@@ -75,7 +75,7 @@ describe "MicropostPages" do
     describe "page" do
       before { visit root_path }
       it "should list each micropost" do
-        user.microposts.paginate(page: 1).each do |post|
+        user.feed.paginate(page: 1).each do |post|
           page.should have_selector('li', text: post.content)
         end
       end
@@ -83,7 +83,7 @@ describe "MicropostPages" do
       describe "2" do
         before { click_link('2') }
         it "should list each micropost" do
-          user.microposts.paginate(page: 2).each do |post|
+          user.feed.paginate(page: 2).each do |post|
             page.should have_selector('li', text: post.content)
           end
         end
